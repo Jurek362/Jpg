@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ankieta Satysfakcji Klienta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .rating-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .rating-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .rating-option.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #667eea;
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            animation: shake 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 20%, 40%, 60%, 80% { transform: translateX(0); }
+            10%, 30%, 50%, 70% { transform: translateX(-10px); }
+            15%, 35%, 55%, 75% { transform: translateX(10px); }
+        }
+
+        .attempt-counter {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .rating-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📺 Ankieta dotycząca kanału</h1>
+            <p>Twoja opinia pomoże nam podjąć właściwą decyzję</p>
+        </div>
+
+        <div class="attempt-counter" id="attemptCounter">
+            Próba wypełnienia: <span id="attemptNumber">1</span>
+        </div>
+
+        <div id="messages"></div>
+
+        <form id="surveyForm">
+            <div class="form-group">
+                <label>1. Czy usunąć kanał? *</label>
+                <div class="rating-group">
+                    <div class="rating-option">
+                        <input type="radio" id="delete-yes" name="delete-channel" value="tak" required>
+                        <label for="delete-yes">✅ Tak, usuń kanał</label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" id="delete-no" name="delete-channel" value="nie" required>
+                        <label for="delete-no">❌ Nie, zostaw kanał</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="explanation">2. Wytłumacz swoją odpowiedź *</label>
+                <textarea id="explanation" name="explanation" placeholder="Wyjaśnij, dlaczego uważasz, że kanał powinien zostać usunięty lub zachowany..." required></textarea>
+            </div>
+
+            <div class="form-group" id="reasonGroup" style="display: none;">
+                <label for="reason" id="reasonLabel">3. Skąd pomysł aby wybrać odpowiedź? *</label>
+                <textarea id="reason" name="reason" placeholder="Opisz co skłoniło Cię do takiej decyzji..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Prześlij Ankietę</button>
+        </form>
+    </div>
+
+    <script>
+        let submissionAttempts = 0;
+
+        // Obsługa wizualna opcji oceny
+        document.querySelectorAll('.rating-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const parentGroup = this.closest('.rating-group');
+                parentGroup.querySelectorAll('.rating-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+                
+                // Pokaż trzecie pytanie i dostosuj tekst
+                showThirdQuestion();
+            });
+        });
+
+        // Funkcja pokazująca trzecie pytanie z odpowiednim tekstem
+        function showThirdQuestion() {
+            const selectedValue = document.querySelector('input[name="delete-channel"]:checked');
+            if (selectedValue) {
+                const reasonGroup = document.getElementById('reasonGroup');
+                const reasonLabel = document.getElementById('reasonLabel');
+                const reasonTextarea = document.getElementById('reason');
+                
+                if (selectedValue.value === 'tak') {
+                    reasonLabel.textContent = '3. Skąd pomysł aby wybrać "Tak"? *';
+                    reasonTextarea.placeholder = 'Opisz co skłoniło Cię do wyboru usunięcia kanału...';
+                } else {
+                    reasonLabel.textContent = '3. Skąd pomysł aby wybrać "Nie"? *';
+                    reasonTextarea.placeholder = 'Opisz co skłoniło Cię do wyboru zachowania kanału...';
+                }
+                
+                reasonGroup.style.display = 'block';
+                reasonGroup.style.animation = 'slideIn 0.5s ease-out';
+            }
+        }
+
+        // Obsługa formularza
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            submissionAttempts++;
+            document.getElementById('attemptNumber').textContent = submissionAttempts;
+            
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = '';
+            
+            if (submissionAttempts === 1 || submissionAttempts === 2) {
+                // Pierwsza i druga próba - błąd
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.innerHTML = `
+                    <h3>❌ Wystąpił błąd!</h3>
+                    <p>Niestety, wystąpił nieoczekiwany błąd podczas zapisywania Twojej opinii o kanale.</p>
+                    <p><strong>Kod błędu:</strong> ERR_CHANNEL_${submissionAttempts === 1 ? '404' : '500'}</p>
+                    <p>Formularz zostanie zresetowany. Prosimy o ponowne wypełnienie.</p>
+                `;
+                messagesDiv.appendChild(errorMessage);
+                
+                // Scroll do błędu
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Reset formularza po 3 sekundach
+                setTimeout(function() {
+                    document.getElementById('surveyForm').reset();
+                    document.querySelectorAll('.rating-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    document.getElementById('reasonGroup').style.display = 'none';
+                    messagesDiv.innerHTML = '';
+                    
+                    // Informacja o resecie
+                    const resetMessage = document.createElement('div');
+                    resetMessage.className = 'success-message';
+                    resetMessage.innerHTML = `
+                        <h3>🔄 Formularz został zresetowany</h3>
+                        <p>Możesz teraz wypełnić ankietę od początku.</p>
+                    `;
+                    messagesDiv.appendChild(resetMessage);
+                    
+                    // Usuń wiadomość o resecie po 3 sekundach
+                    setTimeout(() => {
+                        resetMessage.remove();
+                    }, 3000);
+                    
+                }, 3000);
+                
+            } else if (submissionAttempts === 3) {
+                // Trzecia próba - sukces z resetem
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <h3>✅ Ankieta została wysłana!</h3>
+                    <p>Twoja opinia dotycząca kanału została pomyślnie przesłana. Dziękujemy za wytrwałość!</p>
+                    <p>Formularz zostanie zresetowany.</p>
+                `;
+                messagesDiv.appendChild(successMessage);
+                
+                // Scroll do wiadomości
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Reset formularza po 3 sekundach
+                setTimeout(function() {
+                    document.getElementById('surveyForm').reset();
+                    document.querySelectorAll('.rating-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    document.getElementById('reasonGroup').style.display = 'none';
+                    submissionAttempts = 0;
+                    document.getElementById('attemptNumber').textContent = '1';
+                    messagesDiv.innerHTML = '';
+                    
+                    // Informacja o resecie po sukcesie
+                    const resetMessage = document.createElement('div');
+                    resetMessage.className = 'success-message';
+                    resetMessage.innerHTML = `
+                        <h3>🔄 Formularz został zresetowany</h3>
+                        <p>Możesz wypełnić nową ankietę jeśli chcesz.</p>
+                    `;
+                    messagesDiv.appendChild(resetMessage);
+                    
+                    // Usuń wiadomość o resecie po 3 sekundach
+                    setTimeout(() => {
+                        resetMessage.remove();
+                    }, 3000);
+                    
+                }, 3000);
+                
+            } else {
+                // Kolejne próby (4+) - normalnie działa bez resetu
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <h3>✅ Dziękujemy ponownie!</h3>
+                    <p>Twoja opinia o kanale została pomyślnie przesłana.</p>
+                `;
+                messagesDiv.appendChild(successMessage);
+                
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        // Animacje przy ładowaniu strony
+        window.addEventListener('load', function() {
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(50px)';
+            
+            setTimeout(function() {
+                document.querySelector('.container').style.transition = 'all 0.6s ease-out';
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+  </html>
